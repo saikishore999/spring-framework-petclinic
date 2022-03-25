@@ -1,0 +1,26 @@
+pipeline{
+    agent any
+    stages{
+        stage("git code"){
+            steps{
+                git_repo:"https://github.com/kallepallinaveen/spring-framework-petclinic.gitt", branch:"master"
+            }
+
+        }
+        stage("build  code"){
+            steps{
+                sh "mvn clean install"
+
+            }
+
+        }
+        stage("test   code"){
+            steps{
+                sh "mvn test"
+
+            }
+
+        }
+
+    }
+}
