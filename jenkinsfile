@@ -1,15 +1,22 @@
 pipeline{
     agent any
     stages{
-        stage("build  code"){
+        stage("build code"){
             steps{
                 sh "mvn clean install"
             }
         }
-        stage("test   code"){
+        stage("test code"){
             steps{
                 sh "mvn test"
 
+            }
+        }
+        stage("deploy app"){
+            steps{
+                sshagent(['deployuser']) {
+                sh "scp -o StrictHostKeyChecking=no ./target/petclinic.war naveen@172.18.102.114:/opt/tomcat/webapps"
+                }
             }
         }
     }
