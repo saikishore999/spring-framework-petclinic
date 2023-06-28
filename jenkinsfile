@@ -14,9 +14,11 @@ pipeline{
         }
         stage("deploy app"){
             steps{
-                sshagent(['deployuser']) {
-                sh "ssh -o StrictHostKeyChecking=no ./target/petclinic.war ubuntu@172.18.102.114:/opt/tomcat/webapps"
-                }
+                sshagent(['tomcat']) {
+    // some block
+               sh 'ssh -o StrictHostKeyChecking=no -l ./target/petclinic.war ubuntu@44.205.243.185:/opt/tomcat/webapps'
+
+                } 
             }
         }
     }
