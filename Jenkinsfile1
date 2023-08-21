@@ -1,0 +1,40 @@
+pipeline{
+    agent any
+    environment{
+        DOCKERHUB_CREDENTIALS= credentials('docker_hub')
+        DOCKER_IMAGE_NAME = 'petclinc'
+    }
+    stages{
+        stage("build as code"){
+            steps{
+                sh 'mvn clean install'
+            }
+        }
+        stage('Build a docker image'){
+            steps{
+                script{
+
+                    sh "docker build -t kallepalli/${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} ."
+                }
+            }
+        }
+        stage('push a image'){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'dockerpwd', variable: 'mydockerpasswd')]) {
+
+                    sh "docker login -u kallepalli -p ${mydockerpasswd}"
+                    }
+                    sh "docker push kallepalli/${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}"
+                }
+            }
+        }
+        stage("Run image as conatiner"){
+            steps{
+                script{
+                    sh "docker run -itd --name ${DOCKER_IMAGE_NAME} -p 8082:8080 kallepalli/${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} "
+                }
+            }
+        }
+    }
+}
