@@ -2,7 +2,7 @@ pipeline{
     agent any
     environment{
         DOCKERHUB_CREDENTIALS= credentials('docker_hub')
-        DOCKER_IMAGE_NAME = 'petclinc'
+        DOCKER_IMAGE_NAME = 'petclinci'
     }
     stages{
         stage("build as code"){
